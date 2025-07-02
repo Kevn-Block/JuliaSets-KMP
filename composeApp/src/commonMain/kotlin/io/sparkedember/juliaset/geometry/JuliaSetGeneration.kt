@@ -11,6 +11,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.yield
 import kotlin.math.ceil
 
 object JuliaSetGeneration {
@@ -70,6 +71,7 @@ object JuliaSetGeneration {
                             byteArray[index + 3] = (argb shr 24).toByte()
                         }
                     }
+                    yield()
                 }
             }
         jobs.joinAll()

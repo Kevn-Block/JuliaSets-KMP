@@ -2,6 +2,7 @@ package io.sparkedember.juliaset.const
 
 import androidx.compose.ui.graphics.Color
 import kotlin.math.log
+import kotlin.math.max
 
 sealed class ColoringMethod {
 
@@ -25,7 +26,7 @@ sealed class ColoringMethod {
             val smoothValue = iteration + 1 - nu
 
             val hue = (smoothValue * 15f) % 360f
-            return Color.hsv(hue, 0.9f, 1f)
+            return Color.hsv(max(0f, hue), 0.9f, 1f)
         }
 
         override fun name(): String =

@@ -32,6 +32,7 @@ class JuliaSetViewModel: ViewModel() {
     val state = _state.asStateFlow()
 
     private var animationJob: Job? = null
+    private var imageJob: Job? = null
 
     fun load() {
         viewModelScope.launch(Dispatchers.Default) {
@@ -162,6 +163,10 @@ class JuliaSetViewModel: ViewModel() {
     }
 
     private suspend fun generateImage() {
+        val canvasSize = _state.value.canvasSize
+        if (canvasSize.width <= 0 || canvasSize.height <= 0) {
+            throw Exception("Canvas size is invalid. Currently have $canvasSize")
+        }
         val timeTaken = measureTimedValue { generateAndSetBitmap() }
         val timeTakenInMs = timeTaken.duration.toDouble(DurationUnit.MILLISECONDS).roundTo(2)
         _state.update {
