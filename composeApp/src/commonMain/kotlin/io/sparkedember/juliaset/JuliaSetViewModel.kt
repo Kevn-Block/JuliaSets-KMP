@@ -7,6 +7,7 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.sparkedember.juliaset.const.Defaults
+import io.sparkedember.juliaset.const.DemoJuliaSets
 import io.sparkedember.juliaset.geometry.GenerationOptions
 import io.sparkedember.juliaset.geometry.JuliaSetGeneration
 import io.sparkedember.juliaset.images.encodeToImageBitmap
@@ -30,7 +31,7 @@ class JuliaSetViewModel: ViewModel() {
     private val _state: MutableStateFlow<State> = MutableStateFlow(State())
     val state = _state.asStateFlow()
 
-    private var generationJob: Job? = null
+    private var animationJob: Job? = null
 
     fun load() {
         viewModelScope.launch(Dispatchers.Default) {
@@ -48,15 +49,7 @@ class JuliaSetViewModel: ViewModel() {
                     generateImage()
                 }
         }
-        viewModelScope.launch(Dispatchers.Default) {
-            _state
-                .distinctUntilChangedBy { it.isAnimateConstantEnabled }
-                .collectLatest {
-                    if (it.isAnimateConstantEnabled) {
-                        animateConstant(it.constant, it.animateConstantDelayMs.toLong())
-                    }
-                }
-        }
+        runAnimationJob()
     }
 
     fun onCanvasSizeChanged(canvasSize: Size) {
@@ -66,7 +59,6 @@ class JuliaSetViewModel: ViewModel() {
     }
 
     fun onResetToDefaults() {
-        generationJob?.cancel()
         _state.update {
             State().copy(
                 draftSettings = null,
@@ -75,6 +67,7 @@ class JuliaSetViewModel: ViewModel() {
             )
         }
         viewModelScope.launch(Dispatchers.Default) {
+            runAnimationJob()
             generateImage()
         }
     }
@@ -102,22 +95,45 @@ class JuliaSetViewModel: ViewModel() {
         if (draftSettings == null) {
             return
         }
+        val selectedOffset = if (draftSettings.constantIndex == null || draftSettings.constantIndex == -1) {
+            null
+        } else {
+            DemoJuliaSets[draftSettings.constantIndex]
+        }
         _state.update {
             it.copy(
                 draftSettings = null,
                 animateConstantDelayMs = draftSettings.animateConstantMs,
                 isAnimateConstantEnabled = draftSettings.isAnimateConstantEnabled,
                 zoomRange = draftSettings.zoomRange,
-                constant = draftSettings.constant ?: it.constant,
+                constant = selectedOffset?.offset ?: it.constant,
                 iterationsUntilEscaped = draftSettings.iterationsUntilEscaped,
                 coloringMethodIndex = draftSettings.coloringMethodIndex ?: it.coloringMethodIndex
             )
+        }
+        viewModelScope.launch {
+            runAnimationJob()
+            generateImage()
         }
     }
 
     private fun onConstantChanged(constant: Offset) {
         _state.update {
             it.copy(constant = constant)
+        }
+    }
+
+    private fun runAnimationJob() {
+        animationJob?.cancel()
+        animationJob = viewModelScope.launch(Dispatchers.Default) {
+            _state
+                .distinctUntilChangedBy { it.isAnimateConstantEnabled }
+                .distinctUntilChangedBy { it.animateConstantDelayMs }
+                .collectLatest {
+                    if (it.isAnimateConstantEnabled) {
+                        animateConstant(it.constant, it.animateConstantDelayMs.toLong())
+                    }
+                }
         }
     }
 
@@ -188,5 +204,8 @@ class JuliaSetViewModel: ViewModel() {
         val lastTenRenderTimes: List<Double> = emptyList(),
         val coloringMethodIndex: Int = Defaults.ColoringMethodIndex,
         val draftSettings: SettingsConfig? = null
-    )
+    ) {
+        fun getConstantIndex(): Int =
+            DemoJuliaSets.indexOfLast { it.offset == constant }
+    }
 }

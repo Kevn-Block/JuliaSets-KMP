@@ -43,7 +43,7 @@ fun ColoringMethodDropdownSetting(
         modifier = modifier,
         title = title,
         description = description,
-        defaultValue = Defaults.JuliaSet.name
+        defaultValue = ColoringMethods[Defaults.ColoringMethodIndex].name()
     ) {
         Dropdown(
             currentIndex = currentColoringMethodIndex,

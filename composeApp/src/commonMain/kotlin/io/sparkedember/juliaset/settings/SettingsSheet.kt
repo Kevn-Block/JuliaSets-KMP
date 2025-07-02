@@ -106,15 +106,15 @@ private fun OptionSheetContent(
                 }
             )
         }
-        item(settings.constant?.x, settings.constant?.y) {
+        item {
             OffsetDropdownSetting(
                 modifier = Modifier.fillMaxWidth(),
                 title = "Change Offset",
                 description = "Pick from a variety of offsets to view",
-                currentConstant = settings.constant,
+                constantIndex = settings.constantIndex,
                 onDropdownItemClicked = {
                     onDraftSettingsChanged(
-                        settings.copy(constant = it)
+                        settings.copy(constantIndex = it)
                     )
                 }
             )

@@ -46,7 +46,7 @@ fun App(
                         isAnimateConstantEnabled = state.draftSettings?.isAnimateConstantEnabled ?: state.isAnimateConstantEnabled,
                         animateConstantMs = state.animateConstantDelayMs,
                         zoomRange = state.zoomRange,
-                        constant = state.constant,
+                        constantIndex = state.draftSettings?.constantIndex ?: state.getConstantIndex(),
                         iterationsUntilEscaped = state.iterationsUntilEscaped,
                         coloringMethodIndex = state.coloringMethodIndex
                     ),

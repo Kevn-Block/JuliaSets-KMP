@@ -37,8 +37,8 @@ fun OffsetDropdownSetting(
     modifier: Modifier = Modifier,
     title: String,
     description: String,
-    currentConstant: Offset?,
-    onDropdownItemClicked: (offset: Offset) -> Unit
+    constantIndex: Int?,
+    onDropdownItemClicked: (index: Int) -> Unit
 ) {
     BaseRowSetting(
         modifier = modifier,
@@ -47,7 +47,7 @@ fun OffsetDropdownSetting(
         defaultValue = Defaults.JuliaSet.name
     ) {
         Dropdown(
-            currentOffset = currentConstant,
+            currentOffsetIndex = constantIndex,
             onDropdownItemClicked = onDropdownItemClicked
         )
     }
@@ -55,10 +55,12 @@ fun OffsetDropdownSetting(
 
 @Composable
 private fun Dropdown(
-    currentOffset: Offset?,
-    onDropdownItemClicked: (offset: Offset) -> Unit
+    currentOffsetIndex: Int?,
+    onDropdownItemClicked: (index: Int) -> Unit
 ) {
+    val didSelectedIndexChange = currentOffsetIndex != null && currentOffsetIndex > 0
     var expanded by remember { mutableStateOf(false) }
+    var selectedIndex by remember(didSelectedIndexChange) { mutableStateOf(currentOffsetIndex) }
 
     DropdownMenu(
         onExpandRequest = { expanded = true }
@@ -78,22 +80,23 @@ private fun Dropdown(
                 .width(240.dp)
                 .shadow(4.dp, RoundedCornerShape(8.dp))
         ) {
-            DemoJuliaSets.forEach {
+            DemoJuliaSets.forEachIndexed { index, set ->
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(32.dp)
                         .clickable {
+                            selectedIndex = index
                             expanded = false
-                            onDropdownItemClicked(it.offset)
+                            onDropdownItemClicked(index)
                         },
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
                         modifier = Modifier.padding(8.dp),
-                        text = it.name,
+                        text = set.name,
                     )
-                    if (currentOffset == it.offset) {
+                    if (selectedIndex == index) {
                         Icon(
                             modifier = Modifier.padding(start = 8.dp),
                             imageVector = Icons.Default.Check,
@@ -115,7 +118,7 @@ fun OffsetDropdownSetting_Preview() {
         modifier = Modifier.background(Color.White),
         title = "This is neat",
         description = "This does something really neat. You should click it.",
-        currentConstant = DemoJuliaSets[2].offset,
+        constantIndex = 2,
         onDropdownItemClicked = {}
     )
 }
