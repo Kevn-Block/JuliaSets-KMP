@@ -1,21 +1,24 @@
-This is a Kotlin Multiplatform project targeting Android, iOS, Web, Desktop.
+![3afdd786-1463-4e3e-bfb6-5606eceafe22](https://github.com/user-attachments/assets/49d5ee5d-bb12-4697-acef-8a74eeb9e0b0)
 
-* `/composeApp` is for code that will be shared across your Compose Multiplatform applications.
-  It contains several subfolders:
-  - `commonMain` is for code that’s common for all targets.
-  - Other folders are for Kotlin code that will be compiled for only the platform indicated in the folder name.
-    For example, if you want to use Apple’s CoreCrypto for the iOS part of your Kotlin app,
-    `iosMain` would be the right folder for such calls.
+### Features
+* Render predefined Julia Sets
+* Animate slowly between them
+* Scale in the set, showing off the infinite capability they have
+* Change the color grading of the image
 
-* `/iosApp` contains iOS applications. Even if you’re sharing your UI with Compose Multiplatform, 
-  you need this entry point for your iOS app. This is also where you should add SwiftUI code for your project.
+### Notes
+* Run in release mode for the best performance
+* Animating constants works best on a desktop with a smaller window
+* There are known UI issues, such as extra recomposing
+
+### Animating Constant
+https://github.com/user-attachments/assets/c2e38a96-c5da-411e-8c0c-4789cf9cb698
+
+### Zooming Into Set
+https://github.com/user-attachments/assets/55ddab33-7471-415f-8db2-c2854a689a15
 
 
-Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html),
-[Compose Multiplatform](https://github.com/JetBrains/compose-multiplatform/#compose-multiplatform),
-[Kotlin/Wasm](https://kotl.in/wasm/)…
-
-We would appreciate your feedback on Compose/Web and Kotlin/Wasm in the public Slack channel [#compose-web](https://slack-chats.kotlinlang.org/c/compose-web).
-If you face any issues, please report them on [YouTrack](https://youtrack.jetbrains.com/newIssue?project=CMP).
-
-You can open the web application by running the `:composeApp:wasmJsBrowserDevelopmentRun` Gradle task.
+### Extra Color Modifiers
+| No Banding                                            | Black & White                                         | Palette                                              |
+| ----------------------------------------------------- | ----------------------------------------------------- | ---------------------------------------------------- |
+| <img src="https://github.com/user-attachments/assets/fad41053-74c5-4a94-b116-5b4fd19cfc92" width="300"/> | <img src="https://github.com/user-attachments/assets/285f197f-ef37-44bc-87e0-3f7e46c979aa" width="300"/> | <img src="https://github.com/user-attachments/assets/7c7d35c8-4a5d-4ae9-8ba4-800ae4e78135" width="300"/> |
