@@ -54,7 +54,7 @@ private fun NumberEditor(
     onNumberChanged: (Int) -> Unit,
     onError: (String?) -> Unit
 ) {
-    var textInput by remember { mutableStateOf(initialNumber) }
+    var textInput by remember(initialNumber) { mutableStateOf(initialNumber) }
     TextField(
         modifier = Modifier
             .border(1.dp, Color(0xFFBDBDBD), RoundedCornerShape(4.dp))

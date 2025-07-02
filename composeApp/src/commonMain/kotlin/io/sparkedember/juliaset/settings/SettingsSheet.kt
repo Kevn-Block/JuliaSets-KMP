@@ -78,7 +78,7 @@ private fun OptionSheetContent(
                 }
             )
         }
-        item {
+        item(settings.animateConstantMs) {
             NumberSetting(
                 modifier = Modifier.fillMaxWidth(),
                 title = "Animated Constant Delay",
@@ -92,7 +92,7 @@ private fun OptionSheetContent(
                 }
             )
         }
-        item {
+        item(settings.iterationsUntilEscaped) {
             NumberSetting(
                 modifier = Modifier.fillMaxWidth(),
                 title = "Iterations Until Escape",

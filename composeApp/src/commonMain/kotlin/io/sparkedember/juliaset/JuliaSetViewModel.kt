@@ -32,7 +32,6 @@ class JuliaSetViewModel: ViewModel() {
     val state = _state.asStateFlow()
 
     private var animationJob: Job? = null
-    private var imageJob: Job? = null
 
     fun load() {
         viewModelScope.launch(Dispatchers.Default) {
@@ -69,7 +68,6 @@ class JuliaSetViewModel: ViewModel() {
         }
         viewModelScope.launch(Dispatchers.Default) {
             runAnimationJob()
-            generateImage()
         }
     }
 
@@ -112,10 +110,7 @@ class JuliaSetViewModel: ViewModel() {
                 coloringMethodIndex = draftSettings.coloringMethodIndex ?: it.coloringMethodIndex
             )
         }
-        viewModelScope.launch {
-            runAnimationJob()
-            generateImage()
-        }
+        runAnimationJob()
     }
 
     private fun onConstantChanged(constant: Offset) {
