@@ -48,7 +48,8 @@ fun App(
                         zoomRange = state.zoomRange,
                         constantIndex = state.draftSettings?.constantIndex ?: state.getConstantIndex(),
                         iterationsUntilEscaped = state.iterationsUntilEscaped,
-                        coloringMethodIndex = state.coloringMethodIndex
+                        coloringMethodIndex = state.coloringMethodIndex,
+                        isGPURenderingOn = state.isGPURenderingOn
                     ),
                     onDraftSettingsChanged = {
                         viewModel.onDraftSettingsChanged(it)
@@ -75,12 +76,18 @@ fun App(
                     canvasSize = state.canvasSize,
                     zoomRange = state.zoomRange,
                     center = state.center,
+                    constant = state.constant,
+                    isGPURenderingOn = state.isGPURenderingOn,
+                    isAnimateConstantEnabled = state.isAnimateConstantEnabled,
+                    maxIterations = state.iterationsUntilEscaped,
+                    coloringMethod = state.coloringMethodIndex,
                     rectStrokeColor = Color.Red,
                     onCenterChanged = viewModel::onCenterChanged,
                     onZoomRangeChanged = viewModel::onZoomRangeChanged,
                     onCanvasSizeChanged = viewModel::onCanvasSizeChanged,
                 )
                 AppHeader(
+                    isUsingGPURendering = state.isGPURenderingOn,
                     generationTimeInMs = state.generationTimeMs,
                     onSettingsClicked = {
                         scope.launch { drawerState.open() }

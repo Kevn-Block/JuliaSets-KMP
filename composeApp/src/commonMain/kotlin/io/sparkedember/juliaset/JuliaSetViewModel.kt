@@ -21,6 +21,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.distinctUntilChangedBy
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlin.time.DurationUnit
@@ -36,6 +37,7 @@ class JuliaSetViewModel: ViewModel() {
     fun load() {
         viewModelScope.launch(Dispatchers.Default) {
             _state
+                .filter { !it.isGPURenderingOn }
                 .distinctUntilChanged { old, new ->
                     old.zoomRange == new.zoomRange &&
                             old.center == new.center &&
@@ -107,7 +109,8 @@ class JuliaSetViewModel: ViewModel() {
                 zoomRange = draftSettings.zoomRange,
                 constant = selectedOffset?.offset ?: it.constant,
                 iterationsUntilEscaped = draftSettings.iterationsUntilEscaped,
-                coloringMethodIndex = draftSettings.coloringMethodIndex ?: it.coloringMethodIndex
+                coloringMethodIndex = draftSettings.coloringMethodIndex ?: it.coloringMethodIndex,
+                isGPURenderingOn = draftSettings.isGPURenderingOn
             )
         }
         runAnimationJob()
@@ -126,7 +129,7 @@ class JuliaSetViewModel: ViewModel() {
                 .distinctUntilChangedBy { it.isAnimateConstantEnabled }
                 .distinctUntilChangedBy { it.animateConstantDelayMs }
                 .collectLatest {
-                    if (it.isAnimateConstantEnabled) {
+                    if (it.isAnimateConstantEnabled && !it.isGPURenderingOn) {
                         animateConstant(it.constant, it.animateConstantDelayMs.toLong())
                     }
                 }
@@ -199,6 +202,7 @@ class JuliaSetViewModel: ViewModel() {
         val zoomRange: Float = Defaults.Zoom,
         val generationTimeMs: Double = 0.0,
         val isLoading: Boolean = false,
+        val isGPURenderingOn: Boolean = true,
         val isAnimateConstantEnabled: Boolean = false,
         val animateConstantDelayMs: Int = Defaults.AnimationDelay,
         val lastTenRenderTimes: List<Double> = emptyList(),

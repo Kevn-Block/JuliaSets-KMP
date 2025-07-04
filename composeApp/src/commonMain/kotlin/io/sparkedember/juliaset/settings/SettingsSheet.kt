@@ -67,8 +67,22 @@ private fun OptionSheetContent(
         item {
             ToggleSetting(
                 modifier = Modifier.fillMaxWidth(),
+                title = "Use GPU Rendering",
+                description = "Renders the Julia Set with shaders instead of the CPU.",
+                defaultValue = "On",
+                isToggled = settings.isGPURenderingOn,
+                onToggleChanged = {
+                    onDraftSettingsChanged(
+                        settings.copy(isGPURenderingOn = it)
+                    )
+                }
+            )
+        }
+        item {
+            ToggleSetting(
+                modifier = Modifier.fillMaxWidth(),
                 title = "Animate Constant",
-                description = "Animates the constant to generate Julia Sets. This is very intensive.",
+                description = "Animates the constant to generate Julia Sets. This is very intensive if using CPU mode.",
                 defaultValue = "Off",
                 isToggled = settings.isAnimateConstantEnabled,
                 onToggleChanged = {
@@ -82,7 +96,7 @@ private fun OptionSheetContent(
             NumberSetting(
                 modifier = Modifier.fillMaxWidth(),
                 title = "Animated Constant Delay",
-                description = "Animates the constant between -1 and 1 in the specified ms duration",
+                description = "Animates the constant between -1 and 1 in the specified ms duration. Has no effect when GPU rendering is on.",
                 defaultValue = "50",
                 initialNumber = settings.animateConstantMs.toString(),
                 onNumberChanged = {
