@@ -1,5 +1,10 @@
 ![3afdd786-1463-4e3e-bfb6-5606eceafe22](https://github.com/user-attachments/assets/49d5ee5d-bb12-4697-acef-8a74eeb9e0b0)
 
+### Demo!
+https://kevn-block.github.io/JuliaSets-KMP/
+
+🚨 Be aware, the WASM version is very slow! This app is best used on desktop (or until a shader is written) 🚨
+
 ### Features
 * Render predefined Julia Sets
 * Animate slowly between them
