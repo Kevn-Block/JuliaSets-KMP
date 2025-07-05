@@ -3,18 +3,15 @@
 ### Demo!
 https://kevn-block.github.io/JuliaSets-KMP/
 
-🚨 Be aware, the WASM version is very slow! This app is best used on desktop (or until a shader is written) 🚨
-
 ### Features
-* Render predefined Julia Sets
-* Animate slowly between them
+* Generate predefined Julia Sets on either the GPU or CPU
+* Animate between them
 * Scale in the set, showing off the infinite capability they have
 * Change the color grading of the image
 
 ### Notes
-* Run in release mode for the best performance
-* Animating constants works best on a desktop with a smaller window
-* There are known UI issues, such as extra recomposing
+* Run in release mode for the best performance if using CPU rendering
+* There are known UI issues, such as extra recomposing and finicky menu options
 
 ### Animating Constant
 https://github.com/user-attachments/assets/c2e38a96-c5da-411e-8c0c-4789cf9cb698
