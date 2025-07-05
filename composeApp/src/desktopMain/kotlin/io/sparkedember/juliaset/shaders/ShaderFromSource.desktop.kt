@@ -16,10 +16,11 @@ actual fun juliaSetShader(
         val constant = params.constant
         val maxIterations = params.maxIterations
         uniform("iResolution",size.width, size.height)
-        uniform("center", center.x, center.y)
-        uniform("zoomRange", params.zoomRange)
-        uniform("constant", constant.x, constant.y)
-        uniform("maxIterations", maxIterations)
+        uniform("fCenter", center.x, center.y)
+        uniform("fZoom", params.zoomRange)
+        uniform("fConstant", constant.x, constant.y)
+        uniform("iMaxIterations", maxIterations)
+        uniform("iColorMethod", params.coloringMethod)
     }
 
     val brush = ShaderBrush(builder.makeShader())

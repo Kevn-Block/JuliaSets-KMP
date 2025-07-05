@@ -5,11 +5,11 @@ import androidx.compose.ui.geometry.Size
 
 val JuliaSetShader = """
     uniform float2 iResolution; // The width and height of the component
-    uniform float2 center;      // The center of the view in the complex plane (centerX, centerY)
-    uniform float zoomRange;    // The zoom level
-    uniform float2 constant;           // The Julia constant (x, y)
-    uniform int maxIterations;  // The number of iterations
-    uniform int coloringMethod;
+    uniform float2 fCenter;      // The center of the view in the complex plane (centerX, centerY)
+    uniform float fZoom;    // The zoom level
+    uniform float2 fConstant;    // The Julia constant (x, y)
+    uniform int iMaxIterations;  // The number of iterations
+    uniform int iColorMethod;
     
     half3 getPaletteColor(int i) {
         if (i == 0) return half3(0.027, 0.015, 0.039);
@@ -54,12 +54,20 @@ val JuliaSetShader = """
         return hsv2rgb(hsv);
     }
     
+     half3 getpixelcolor(int i, float2 c) {
+        if (iColorMethod == 0) return defaultcolormethod(i);
+        if (iColorMethod == 1) return nocolorbanding(c, i);
+        if (iColorMethod == 2) return blackandwhite(i);
+        if (iColorMethod == 3) return palette(i);
+        return half3(0.0, 0.0, 0.0);
+    }
+    
     half4 main(float2 fragCoord) {
         float aspectRatio = iResolution.x / iResolution.y;
-        float2 correctedZoom = float2(zoomRange * aspectRatio, zoomRange);
+        float2 correctedZoom = float2(fZoom * aspectRatio, fZoom);
         float2 uv = fragCoord.xy / iResolution.xy;
-        float zx = uv.x * correctedZoom.x + (center.x - correctedZoom.x / 2.0);
-        float zy = uv.y * correctedZoom.y + (center.y - correctedZoom.y / 2.0);
+        float zx = uv.x * correctedZoom.x + (fCenter.x - correctedZoom.x / 2.0);
+        float zy = uv.y * correctedZoom.y + (fCenter.y - correctedZoom.y / 2.0);
     
         int iteration = 0;
         // Since we can't have a changing variable as the iterator, we will clamp to 1000
@@ -67,28 +75,19 @@ val JuliaSetShader = """
             iteration = i;
             
             float tempzx = zx;
-            zx = zx * zx - zy * zy + constant.x;
-            zy = 2 * tempzx * zy + constant.y;
+            zx = zx * zx - zy * zy + fConstant.x;
+            zy = 2 * tempzx * zy + fConstant.y;
     
             if (zx * zx + zy * zy > 4.0) {
                 break;
             }
         }
     
-        if (iteration >= maxIterations - 1) {
+        if (iteration >= iMaxIterations - 1) {
             return half4(0.0, 0.0, 0.0, 1.0);
         }
         
-        half3 rgb;
-        if (coloringMethod == 0) {
-            rgb = defaultcolormethod(iteration);
-        } else if (coloringMethod == 1) {
-            rgb = nocolorbanding(float2(zx, zy), iteration);
-        } else if (coloringMethod == 2) {
-            rgb = blackandwhite(iteration);
-        } else if (coloringMethod == 3) {
-            rgb = palette(iteration);
-        }
+        half3 rgb = getpixelcolor(iteration, float2(zx, zy));
         // Swap the blue and red channels for neat colors :)
         return half4(rgb.b, rgb.g, rgb.r, 1.0);
     }

@@ -17,11 +17,11 @@ actual fun juliaSetShader(
         val constant = params.constant
         val maxIterations = params.maxIterations
         setFloatUniform("iResolution",size.width, size.height)
-        setFloatUniform("center", center.x, center.y)
-        setFloatUniform("zoomRange", params.zoomRange)
-        setFloatUniform("constant", constant.x, constant.y)
-        setIntUniform("maxIterations", maxIterations)
-        setIntUniform("coloringMethod", params.coloringMethod)
+        setFloatUniform("fCenter", center.x, center.y)
+        setFloatUniform("fZoom", params.zoomRange)
+        setFloatUniform("fConstant", constant.x, constant.y)
+        setIntUniform("iMaxIterations", maxIterations)
+        setIntUniform("iColorMethod", params.coloringMethod)
     }
 
     val brush = ShaderBrush(shader)
